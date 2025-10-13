@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}ASD Screener{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>🧪 ASD Screener</h1>
+        <p>This tool uses a machine learning model to predict the likelihood of ASD based on the AQ-10 questionnaire. Please fill out the information below to get a prediction.</p>
+    </div>
+
+    <!-- The result will be shown here if it exists -->
+    {% if result %}
+        <div class="result-box {% if result.prediction == 1 %}result-warning{% else %}result-success{% endif %}">
+            {% if result.prediction == 1 %}
+                <h2>Result: Potential for ASD Detected</h2>
+                <p><strong>Confidence: {{ result.confidence }}</strong></p>
+                <p>This result suggests that a formal clinical diagnosis with a healthcare professional is recommended.</p>
+            {% else %}
+                <h2>Result: Low Likelihood of ASD</h2>
+                <p><strong>Confidence: {{ result.confidence }}</strong></p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <form action="{{ url_for('screener') }}" method="post">
+
+            <div class="form-section">
+                <h3>👤 Personal Information</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="model_choice">Age Group</label>
+                        <select name="model_choice" id="model_choice" required>
+                            <option value="adult" selected>Adult (18+)</option>
+                            <option value="adolescent">Adolescent (12-17)</option>
+                            <option value="child">Child (4-11)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="age">Age (years)</label>
+                        <input type="number" id="age" name="age" min="1" max="100" value="18" required>
+                    </div>
+                    <div>
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="jaundice">Born with jaundice?</label>
+                        <select id="jaundice" name="jaundice" required>
+                            <option>No</option>
+                            <option>Yes</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="family_asd">Family member with PDD?</label>
+                        <select id="family_asd" name="family_asd" required>
+                            <option>No</option>
+                            <option>Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📝 Screening Questionnaire (AQ-10)</h3>
+                <div class="questionnaire-grid">
+                    {% set questions = [
+                        ("A1_Score", "Often notices small sounds that others do not"),
+                        ("A2_Score", "Usually concentrates more on the whole picture, rather than the small details"),
+                        ("A3_Score", "In a social group, can easily keep track of several different people’s conversations"),
+                        ("A4_Score", "Finds it easy to go back and forth between different activities"),
+                        ("A5_Score", "Knows how to tell if someone listening to them is getting bored"),
+                        ("A6_Score", "Finds it easy to read between the lines when someone is talking"),
+                        ("A7_Score", "Likes to collect information about categories of things"),
+                        ("A8_Score", "Finds it difficult to imagine what it would be like to be someone else"),
+                        ("A9_Score", "Finds it easy to work out what someone is thinking or feeling just by looking at their face"),
+                        ("A10_Score", "Finds it hard to make new friends")
+                    ] %}
+
+                    {% for key, q_text in questions %}
+                    <div class="question-item">
+                        <p><strong>{{ key.split('_')[0] }}:</strong> {{ q_text }}</p>
+                        <div class="radio-group">
+                            <input type="radio" id="{{ key }}_yes" name="{{ key }}" value="Yes" required> <label for="{{ key }}_yes">Yes</label>
+                            <input type="radio" id="{{ key }}_no" name="{{ key }}" value="No"> <label for="{{ key }}_no">No</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit">▶️ Get Prediction</button>
+        </form>
+    </div>
+{% endblock %}

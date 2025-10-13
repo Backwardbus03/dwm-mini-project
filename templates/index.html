@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Welcome - ASD Screening Hub{% endblock %}
+
+{% block content %}
+    <div class="card" style="text-align: center;">
+        <h1>Welcome to the ASD Screening & Analytics Hub 🧠</h1>
+        <p>This application is a comprehensive tool for Autism Spectrum Disorder (ASD) screening, built using machine learning. It provides key functionalities to help users understand and explore ASD traits.</p>
+    </div>
+
+    <div class="card">
+        <h3>How to Get Started</h3>
+        <ol>
+            <li>
+                <strong>🧪 ASD Screener:</strong> Navigate to the screener page to begin a new assessment. This interactive tool will guide you through the AQ-10 questionnaire.
+            </li>
+            <li>
+                <strong>📊 Interactive Analysis:</strong> Visit the analysis page to explore which factors are most predictive for different age groups, based on our machine learning models.
+            </li>
+            <li>
+                <strong>📚 Methodology & Resources:</strong> Learn about the underlying technology and find links to professional resources for more information and support.
+            </li>
+        </ol>
+        <a href="{{ url_for('screener') }}" style="text-decoration:none;">
+            <button type="submit" style="width:100%;">Get Started with a New Screening →</button>
+        </a>
+    </div>
+
+    <div class="card card-info" style="background-color: #fffbe6; border-left-color: #ffc107;">
+        <p><strong>Disclaimer:</strong> This tool is for informational and screening purposes only. It is <strong>not</strong> a substitute for a professional medical diagnosis. Please consult a qualified healthcare professional for an accurate diagnosis.</p>
+    </div>
+{% endblock %}

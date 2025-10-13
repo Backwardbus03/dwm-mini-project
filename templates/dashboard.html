@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Interactive Model Analysis{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>📊 Interactive Model Analysis</h1>
+        <p>Explore what factors the machine learning model considers most important for predicting ASD in different age groups.</p>
+
+        <!-- Form to select the age group. It reloads the page with a new query parameter on change. -->
+        <form action="{{ url_for('dashboard') }}" method="get">
+            <label for="age_group"><strong>Select an age group to analyze its prediction model:</strong></label>
+            <select name="age_group" id="age_group" onchange="this.form.submit()">
+                <option {% if selected_group == 'Adult' %}selected{% endif %}>Adult</option>
+                <option {% if selected_group == 'Adolescent' %}selected{% endif %}>Adolescent</option>
+                <option {% if selected_group == 'Child' %}selected{% endif %}>Child</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="card">
+        {% if chart_html %}
+            <div class="card-info">
+                The chart below shows the features ranked by their importance. A higher value means the model relies on that feature more when making a prediction for the <strong>{{ selected_group }}</strong> group.
+            </div>
+            <!-- The '| safe' filter is crucial to render the HTML from the Plotly chart -->
+            {{ chart_html | safe }}
+        {% else %}
+            <p style="color: red; text-align: center;">Feature importance data not found. Please ensure the model training script has been run successfully.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

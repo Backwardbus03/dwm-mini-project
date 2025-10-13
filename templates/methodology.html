@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Methodology & Resources{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h1>📚 Methodology & Resources</h1>
+        <p>Understand the technology behind this tool and find reliable resources for further information.</p>
+    </div>
+
+    <div class="card">
+        <h3>Machine Learning Model</h3>
+        <p>
+            This tool uses a <strong>Random Forest Classifier</strong>, a powerful and widely-used machine learning algorithm. Here's why it was chosen:
+        </p>
+        <ul>
+            <li><strong>Accuracy:</strong> It is known for high accuracy on diverse datasets.</li>
+            <li><strong>Robustness:</strong> It handles missing values and maintains performance even with varied data.</li>
+            <li><strong>Interpretability:</strong> It can determine the importance of different factors (e.g., which question is most predictive).</li>
+        </ul>
+        <p>
+            The model was trained on the datasets you can explore on the <a href="{{ url_for('dashboard') }}">Dashboard & Analytics</a> page.
+        </p>
+    </div>
+
+    <div class="card card-info">
+        <h3>AQ-10 Scoring Logic</h3>
+        <p><strong>Important:</strong> Not all "Yes" answers indicate an ASD trait. Some questions are reverse-scored.</p>
+        <ul>
+            <li><strong>Score 1 point for 'Yes' on questions:</strong> A1, A7, A8, A10.</li>
+            <li><strong>Score 1 point for 'No' on questions:</strong> A2, A3, A4, A5, A6, A9.</li>
+        </ul>
+        <p>The application automatically applies this logic before sending the data to the model.</p>
+    </div>
+    
+    <div class="card">
+        <h3>Further Reading & Professional Resources</h3>
+        <p>If you or someone you know has concerns about Autism Spectrum Disorder, please consult with a qualified healthcare professional. The following organizations provide reliable information and support:</p>
+        <ul>
+            <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer">Autism Speaks</a></li>
+            <li><a href="https://autismsociety.org/" target="_blank" rel="noopener noreferrer">The Autism Society</a></li>
+            <li><a href="https://www.who.int/news-room/fact-sheets/detail/autism-spectrum-disorders" target="_blank" rel="noopener noreferrer">World Health Organization (WHO) - Autism</a></li>
+        </ul>
+    </div>
+{% endblock %}

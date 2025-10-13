@@ -1,0 +1,196 @@
+/* --- General Body & Typography --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* --- Navigation Bar --- */
+nav {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav .logo a {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+nav .nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+}
+
+nav .nav-links a:hover, nav .nav-links a.active {
+    color: #0056b3;
+}
+
+/* --- Main Content Container --- */
+.content {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+/* --- Headings & Text --- */
+h1, h2, h3 {
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; border-bottom: 2px solid #007bff; padding-bottom: 0.5rem; margin-top: 2rem; }
+p { margin-bottom: 1rem; }
+
+/* --- Cards & Sections --- */
+.card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.card-info {
+    background-color: #e7f3ff;
+    border-left: 5px solid #007bff;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 5px;
+}
+
+/* --- Form Elements --- */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.questionnaire-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+}
+
+.question-item {
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.radio-group label {
+    font-weight: normal;
+    margin-right: 15px;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* --- Buttons --- */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+
+/* --- Result/Alert Boxes --- */
+.result-box {
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.result-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+}
+
+.result-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    nav .nav-links {
+        margin-top: 1rem;
+    }
+    nav .nav-links a {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+    .questionnaire-grid {
+        grid-template-columns: 1fr;
+    }
+    .content {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ASD Screening Hub{% endblock %}</title>
+    <!-- Link to the external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Include Plotly.js from a CDN for the dashboard -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">🧠 ASD Screening Hub</a>
+        </div>
+        <div class="nav-links">
+            <!-- Check the current page to apply the 'active' class for styling -->
+            <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' else '' }}">Home</a>
+            <a href="{{ url_for('screener') }}" class="{{ 'active' if request.endpoint == 'screener' else '' }}">Screener</a>
+            <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
+            <a href="{{ url_for('methodology') }}" class="{{ 'active' if request.endpoint == 'methodology' else '' }}">Methodology</a>
+        </div>
+    </nav>
+    <main class="content">
+        <!-- The content from child templates will be inserted here -->
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
