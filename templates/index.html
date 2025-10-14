@@ -23,6 +23,7 @@
             <!-- Right Side Tiles -->
             <div class="grid grid-cols-1 gap-6">
                 <!-- Get Started Tile - Entire tile is clickable -->
+                <div class="animate-particle" style="animation-delay: 0.6s;">
                 <a href="{{ url_for('screener') }}" class="block group relative overflow-hidden rounded-3xl shadow-2xl h-[22vh] lg:h-[33vh] transform hover:scale-105 hover:shadow-cyan-500/50 transition-all duration-500 cursor-pointer">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-600"></div>
                     <div class="relative z-10 h-full flex flex-col justify-center p-6 text-white">
@@ -36,9 +37,10 @@
                         </div>
                     </div>
                     <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                </a>
+                </a></div>
                 
                 <!-- Analytics Tile - Entire tile is clickable -->
+                <div class="animate-particle" style="animation-delay: 0.8s;">
                 <a href="{{ url_for('dashboard') }}" class="block group relative overflow-hidden rounded-3xl shadow-2xl h-[22vh] lg:h-[33vh] transform hover:scale-105 hover:shadow-green-500/50 transition-all duration-500 cursor-pointer">
                     <img src="/static/images/analytics-chart.jpg" alt="Analytics Dashboard" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500">
                     <div class="absolute inset-0 bg-gradient-to-br from-teal-500 to-green-600"></div>
@@ -53,7 +55,7 @@
                         </div>
                     </div>
                     <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
-                </a>
+                </a></div>
             </div>
         </div>
 

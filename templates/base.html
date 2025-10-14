@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,88 +9,186 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .animate-fadeIn {
             animation: fadeIn 0.6s ease-out;
         }
+
         .glass-effect {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
+
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
     </style>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes particleFade {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8);
+                filter: blur(10px);
+            }
+
+            50% {
+                filter: blur(5px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .animate-particle {
+            opacity: 0;
+            animation: particleFade 0.8s ease-out forwards;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Particle sparkle effect */
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .particle-spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 overflow-x-hidden">
     <nav class="glass-effect shadow-lg sticky top-0 z-50 w-full border-b border-white/20">
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
-                    <a href="{{ url_for('home') }}" 
-                       class="flex items-center text-xl sm:text-2xl font-bold hover:scale-105 transition-transform duration-300">
+                    <a href="{{ url_for('home') }}"
+                        class="flex items-center text-xl sm:text-2xl font-bold hover:scale-105 transition-transform duration-300">
                         <span class="mr-2">🧠</span>
-                        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
+                        <span
+                            class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
                             ASD Screening Hub
                         </span>
                     </a>
                 </div>
-                
+
                 <div class="hidden md:flex md:space-x-2 lg:space-x-3">
-                    <a href="{{ url_for('home') }}" 
-                       class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                    <a href="{{ url_for('home') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'home' else 'text-gray-700 hover:text-indigo-600' }}">
                         <span class="relative z-10">Home</span>
                         {% if request.endpoint != 'home' %}
-                        <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
-                    <a href="{{ url_for('screener') }}" 
-                       class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                    <a href="{{ url_for('screener') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'screener' else 'text-gray-700 hover:text-indigo-600' }}">
                         <span class="relative z-10">Screener</span>
                         {% if request.endpoint != 'screener' %}
-                        <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
-                    <a href="{{ url_for('dashboard') }}" 
-                       class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                    <a href="{{ url_for('dashboard') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'dashboard' else 'text-gray-700 hover:text-indigo-600' }}">
                         <span class="relative z-10">Dashboard</span>
                         {% if request.endpoint != 'dashboard' %}
-                        <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
-                    <a href="{{ url_for('demographics') }}" 
-                       class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                    <a href="{{ url_for('demographics') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'demographics' else 'text-gray-700 hover:text-indigo-600' }}">
                         <span class="relative z-10">Demographics</span>
                         {% if request.endpoint != 'demographics' %}
-                        <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
-                    <a href="{{ url_for('methodology') }}" 
-                       class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                    <a href="{{ url_for('methodology') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'methodology' else 'text-gray-700 hover:text-indigo-600' }}">
                         <span class="relative z-10">Methodology</span>
                         {% if request.endpoint != 'methodology' %}
-                        <span class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
                 </div>
 
                 <div class="md:hidden">
-                    <button type="button" 
-                            class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:bg-white/50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300"
-                            onclick="toggleMobileMenu()">
+                    <button type="button"
+                        class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:bg-white/50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300"
+                        onclick="toggleMobileMenu()">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
@@ -98,28 +197,28 @@
 
         <div id="mobile-menu" class="hidden md:hidden border-t border-white/20 glass-effect">
             <div class="px-4 pt-2 pb-3 space-y-1">
-                <a href="{{ url_for('home') }}" 
-                   class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
+                <a href="{{ url_for('home') }}"
+                    class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
                           {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' if request.endpoint == 'home' else 'text-gray-700 hover:bg-white/50 hover:text-indigo-600' }}">
                     Home
                 </a>
-                <a href="{{ url_for('screener') }}" 
-                   class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
+                <a href="{{ url_for('screener') }}"
+                    class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
                           {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' if request.endpoint == 'screener' else 'text-gray-700 hover:bg-white/50 hover:text-indigo-600' }}">
                     Screener
                 </a>
-                <a href="{{ url_for('dashboard') }}" 
-                   class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
+                <a href="{{ url_for('dashboard') }}"
+                    class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
                           {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' if request.endpoint == 'dashboard' else 'text-gray-700 hover:bg-white/50 hover:text-indigo-600' }}">
                     Dashboard
                 </a>
-                <a href="{{ url_for('demographics') }}" 
-                   class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
+                <a href="{{ url_for('demographics') }}"
+                    class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
                           {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' if request.endpoint == 'demographics' else 'text-gray-700 hover:bg-white/50 hover:text-indigo-600' }}">
                     Demographics
                 </a>
-                <a href="{{ url_for('methodology') }}" 
-                   class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
+                <a href="{{ url_for('methodology') }}"
+                    class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300
                           {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' if request.endpoint == 'methodology' else 'text-gray-700 hover:bg-white/50 hover:text-indigo-600' }}">
                     Methodology
                 </a>
@@ -127,11 +226,11 @@
         </div>
     </nav>
 
-    <main class="w-full" onclick="closeOnOutsideClick(event)">
+    <main class="w-full">
         {% block content %}{% endblock %}
     </main>
 
-    <div id="backdrop-overlay" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40" onclick="clearAllFocus()"></div>
+
 
     <script>
         function toggleMobileMenu() {
@@ -139,53 +238,31 @@
             menu.classList.toggle('hidden');
         }
 
-        function clearAllFocus() {
-            document.querySelectorAll('input, select, textarea').forEach(el => el.blur());
-            const backdrop = document.getElementById('backdrop-overlay');
-            backdrop.classList.add('hidden');
-        }
-
-        function closeOnOutsideClick(event) {
-            if (event.target === event.currentTarget) {
-                clearAllFocus();
-            }
-        }
-
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-            
+
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
                 button.classList.add('bg-white/50', 'text-gray-700');
             });
-            
+
             const selectedContent = document.getElementById(tabId);
             if (selectedContent) {
                 selectedContent.classList.add('active');
             }
-            
+
             const selectedButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
             if (selectedButton) {
                 selectedButton.classList.remove('bg-white/50', 'text-gray-700');
                 selectedButton.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-lg');
             }
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('input, select, textarea').forEach(element => {
-                element.addEventListener('focus', function() {
-                    const backdrop = document.getElementById('backdrop-overlay');
-                    backdrop.classList.remove('hidden');
-                    this.classList.add('ring-4', 'ring-indigo-300', 'scale-105', 'z-50', 'relative');
-                });
-                
-                element.addEventListener('blur', function() {
-                    this.classList.remove('ring-4', 'ring-indigo-300', 'scale-105', 'z-50', 'relative');
-                });
-            });
-        });
     </script>
+
+
+
 </body>
+
 </html>
