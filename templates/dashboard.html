@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block title %}Interactive Model Analysis{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-4rem)] px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Split Layout: Title + Buttons Left, Chart Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Side: Title + Age Group Buttons -->
+            <div class="lg:col-span-4 space-y-4">
+                <!-- Header (shows on left for wide screens) -->
+                <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn">
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 flex items-center gap-2">
+                        <span class="text-3xl sm:text-4xl">📊</span>
+                        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Interactive Model Analysis</span>
+                    </h1>
+                    <p class="text-sm sm:text-base lg:text-lg text-gray-700">Select an age group to explore feature importance.</p>
+                </div>
+
+                <!-- Age Group Buttons -->
+                <form action="{{ url_for('dashboard') }}" method="get">
+                    <input type="hidden" name="age_group" value="Adult">
+                    <button type="submit" class="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 {{ 'ring-4 ring-blue-300' if selected_group == 'Adult' else '' }}">
+                        <div class="relative z-10">
+                            <div class="text-4xl sm:text-5xl mb-3">👨‍💼</div>
+                            <h3 class="text-2xl sm:text-3xl font-bold mb-2">Adult</h3>
+                            <p class="text-sm sm:text-base opacity-90">Ages 18+</p>
+                        </div>
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                    </button>
+                </form>
+                
+                <form action="{{ url_for('dashboard') }}" method="get">
+                    <input type="hidden" name="age_group" value="Adolescent">
+                    <button type="submit" class="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 {{ 'ring-4 ring-purple-300' if selected_group == 'Adolescent' else '' }}">
+                        <div class="relative z-10">
+                            <div class="text-4xl sm:text-5xl mb-3">👦</div>
+                            <h3 class="text-2xl sm:text-3xl font-bold mb-2">Adolescent</h3>
+                            <p class="text-sm sm:text-base opacity-90">Ages 12-17</p>
+                        </div>
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                    </button>
+                </form>
+                
+                <form action="{{ url_for('dashboard') }}" method="get">
+                    <input type="hidden" name="age_group" value="Child">
+                    <button type="submit" class="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 text-white p-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 {{ 'ring-4 ring-green-300' if selected_group == 'Child' else '' }}">
+                        <div class="relative z-10">
+                            <div class="text-4xl sm:text-5xl mb-3">👶</div>
+                            <h3 class="text-2xl sm:text-3xl font-bold mb-2">Child</h3>
+                            <p class="text-sm sm:text-base opacity-90">Ages 4-11</p>
+                        </div>
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Side: Chart Display -->
+            <div class="lg:col-span-8">
+                <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn h-full">
+                    {% if selected_group %}
+                        {% if chart_html %}
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-4 sm:p-5 mb-6 rounded-xl shadow-inner">
+                                <p class="text-base sm:text-lg lg:text-xl text-gray-700">
+                                    Feature importance for <strong class="text-indigo-600 text-xl sm:text-2xl">{{ selected_group }}</strong> age group. Higher values indicate stronger predictive factors.
+                                </p>
+                            </div>
+                            
+                            <!-- Chart Container -->
+                            <div id="chart-container" class="bg-white rounded-xl p-4 sm:p-6 shadow-inner">
+                                {{ chart_html | safe }}
+                            </div>
+                            
+                            <!-- Question Display -->
+                            <div id="question-display" class="hidden mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border-2 border-indigo-300 shadow-lg animate-fadeIn">
+                                <h3 class="text-xl sm:text-2xl font-bold text-indigo-700 mb-3 flex items-center gap-2">
+                                    <span class="text-3xl">💡</span> Selected Feature
+                                </h3>
+                                <p id="question-text" class="text-base sm:text-lg lg:text-xl text-gray-800"></p>
+                            </div>
+                        {% else %}
+                            <div class="flex flex-col items-center justify-center h-full py-12">
+                                <div class="text-6xl sm:text-8xl mb-6">⚠️</div>
+                                <p class="text-lg sm:text-xl lg:text-2xl text-red-600 font-bold text-center">Feature importance data not found.</p>
+                                <p class="text-base sm:text-lg text-gray-600 text-center mt-3">Please ensure the model training script has been run successfully.</p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="flex flex-col items-center justify-center h-full py-20">
+                            <div class="text-6xl sm:text-8xl mb-6">👈</div>
+                            <p class="text-xl sm:text-2xl lg:text-3xl text-gray-700 font-bold text-center mb-4">Select an Age Group</p>
+                            <p class="text-base sm:text-lg text-gray-600 text-center max-w-md">
+                                Click one of the age group buttons on the left to view the feature importance analysis for that demographic.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Question mapping for Plotly click events
+    const questionMap = {
+        'A1': 'Often notices small sounds that others do not',
+        'A2': 'Usually concentrates more on the whole picture, rather than the small details',
+        'A3': 'In a social group, can easily keep track of several different people\'s conversations',
+        'A4': 'Finds it easy to go back and forth between different activities',
+        'A5': 'Knows how to tell if someone listening to them is getting bored',
+        'A6': 'Finds it easy to read between the lines when someone is talking',
+        'A7': 'Likes to collect information about categories of things',
+        'A8': 'Finds it difficult to imagine what it would be like to be someone else',
+        'A9': 'Finds it easy to work out what someone is thinking or feeling just by looking at their face',
+        'A10': 'Finds it hard to make new friends',
+        'age': 'Age of the participant',
+        'gender': 'Gender of the participant',
+        'jaundice': 'Born with jaundice',
+        'austim': 'Family member with PDD (Pervasive Developmental Disorder)'
+    };
+    
+    // Add click event to Plotly chart if it exists
+    document.addEventListener('DOMContentLoaded', function() {
+        const plotDiv = document.querySelector('#chart-container [id*="plotly"]') || document.querySelector('.js-plotly-plot');
+        
+        if (plotDiv && window.Plotly) {
+            plotDiv.on('plotly_click', function(data) {
+                if (data.points && data.points.length > 0) {
+                    const point = data.points[0];
+                    const featureName = point.y || point.x || point.label;
+                    
+                    // Extract feature key
+                    let featureKey = featureName;
+                    if (featureName && typeof featureName === 'string' && featureName.includes('_')) {
+                        featureKey = featureName.split('_')[0];
+                    }
+                    
+                    const questionText = questionMap[featureKey];
+                    if (questionText) {
+                        document.getElementById('question-text').innerHTML = `<strong class="text-indigo-600 text-2xl">${featureKey}:</strong> ${questionText}`;
+                        document.getElementById('question-display').classList.remove('hidden');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

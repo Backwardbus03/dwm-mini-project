@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% block title %}Methodology{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-4rem)] px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="glass-effect rounded-2xl shadow-xl p-6 sm:p-8 mb-6 border border-white/20 animate-fadeIn">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 flex items-center gap-3">
+                <span class="text-4xl sm:text-5xl">🔬</span>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Methodology</span>
+            </h1>
+            <p class="text-base sm:text-lg lg:text-xl text-gray-700">Understanding our machine learning approach to ASD screening.</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="glass-effect rounded-2xl shadow-xl border border-white/20 overflow-hidden animate-fadeIn">
+            <div class="flex flex-wrap border-b border-gray-200 bg-white/50">
+                <button onclick="showTab('dataset-tab')" class="tab-button bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg px-6 py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:from-indigo-600 hover:to-purple-700">
+                    📊 Dataset
+                </button>
+                <button onclick="showTab('features-tab')" class="tab-button bg-white/50 text-gray-700 px-6 py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:bg-indigo-50">
+                    🎯 Features
+                </button>
+                <button onclick="showTab('model-tab')" class="tab-button bg-white/50 text-gray-700 px-6 py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:bg-indigo-50">
+                    🤖 Model
+                </button>
+                <button onclick="showTab('performance-tab')" class="tab-button bg-white/50 text-gray-700 px-6 py-4 text-base sm:text-lg font-semibold transition-all duration-300 hover:bg-indigo-50">
+                    📈 Performance
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="p-6">
+                <!-- Dataset Tab -->
+                <div id="dataset-tab" class="tab-content active">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="text-3xl">📊</span> Dataset Overview
+                    </h2>
+                    <p class="text-base sm:text-lg text-gray-700 mb-4">
+                        Our models are trained on the comprehensive <strong>Autism Screening Data Combined</strong> dataset containing:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">Total Samples</h3>
+                            <p class="text-4xl font-bold">6,075</p>
+                            <p class="text-sm opacity-90">Across all age groups</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">Children (0-11)</h3>
+                            <p class="text-4xl font-bold">2,159</p>
+                            <p class="text-sm opacity-90">Samples</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">Adolescents (12-17)</h3>
+                            <p class="text-4xl font-bold">711</p>
+                            <p class="text-sm opacity-90">Samples</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-orange-500 to-red-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">Adults (18+)</h3>
+                            <p class="text-4xl font-bold">3,205</p>
+                            <p class="text-sm opacity-90">Samples</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">ASD Positive</h3>
+                            <p class="text-4xl font-bold">29.7%</p>
+                            <p class="text-sm opacity-90">Classification rate</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-5 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-2">Balance</h3>
+                            <p class="text-4xl font-bold">Good</p>
+                            <p class="text-sm opacity-90">Data distribution</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Tab -->
+                <div id="features-tab" class="tab-content">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="text-3xl">🎯</span> Input Features
+                    </h2>
+                    <p class="text-base sm:text-lg text-gray-700 mb-4">
+                        The model uses <strong>14 input features</strong> to make predictions:
+                    </p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-l-4 border-blue-500">
+                            <h3 class="text-xl font-bold text-indigo-700 mb-3">AQ-10 Questionnaire</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><strong>A1-A10:</strong> Ten validated screening questions</li>
+                                <li>Measures social interaction, communication, and behavioral patterns</li>
+                                <li>Reverse-scored questions (A2, A3, A4, A5, A6, A9)</li>
+                                <li>Direct-scored questions (A1, A7, A8, A10)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border-l-4 border-purple-500">
+                            <h3 class="text-xl font-bold text-purple-700 mb-3">Demographics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><strong>Age:</strong> Participant's age in years</li>
+                                <li><strong>Gender:</strong> Male or Female</li>
+                                <li><strong>Jaundice:</strong> Born with jaundice (yes/no)</li>
+                                <li><strong>Family ASD:</strong> Family member with PDD (yes/no)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Tab -->
+                <div id="model-tab" class="tab-content">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="text-3xl">🤖</span> Model Architecture
+                    </h2>
+                    <p class="text-base sm:text-lg text-gray-700 mb-4">
+                        We employ <strong>Random Forest Classifiers</strong> - a powerful ensemble learning algorithm that combines multiple decision trees for robust predictions.
+                    </p>
+                    <div class="flex flex-row gap-4 items-stretch">
+                    <div class="flex-1 bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-xl border-l-4 border-green-500">
+                        <h3 class="text-xl font-bold text-green-700 mb-3">Model Configuration</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>100 estimators:</strong> Ensemble of 100 decision trees</li>
+                            <li><strong>Max depth: 10:</strong> Prevents overfitting while maintaining accuracy</li>
+                            <li><strong>Balanced class weights:</strong> Handles class imbalance effectively</li>
+                            <li><strong>One-hot encoding:</strong> Categorical features transformed appropriately</li>
+                            <li><strong>Separate models:</strong> Individual models for each age group</li>
+                        </ul>
+                    </div>
+                    <div class="flex-1 bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border-l-4 border-yellow-500">
+                        <h3 class="text-xl font-bold text-orange-700 mb-3">Training Process</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>Train/Test Split:</strong> 80/20 stratified split</li>
+                            <li><strong>Random State:</strong> 42 (for reproducibility)</li>
+                            <li><strong>Preprocessing:</strong> Automated pipeline with sklearn</li>
+                            <li><strong>Validation:</strong> Cross-validation on training set</li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Performance Tab -->
+                <div id="performance-tab" class="tab-content">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="text-3xl">📈</span> Model Performance
+                    </h2>
+                    <p class="text-base sm:text-lg text-gray-700 mb-4">
+                        Separate models trained for each age group achieve excellent accuracy:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-2">Adult Model</h3>
+                            <p class="text-4xl font-bold">~88%</p>
+                            <p class="text-sm opacity-90">Accuracy</p>
+                            <p class="text-xs mt-2 opacity-80">3,205 samples</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-2">Adolescent Model</h3>
+                            <p class="text-4xl font-bold">~85%</p>
+                            <p class="text-sm opacity-90">Accuracy</p>
+                            <p class="text-xs mt-2 opacity-80">711 samples</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-2">Child Model</h3>
+                            <p class="text-4xl font-bold">~87%</p>
+                            <p class="text-sm opacity-90">Accuracy</p>
+                            <p class="text-xs mt-2 opacity-80">2,159 samples</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border-l-4 border-indigo-500">
+                        <h3 class="text-xl font-bold text-indigo-700 mb-3">Evaluation Metrics</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>Precision:</strong> High precision ensures few false positives</li>
+                            <li><strong>Recall:</strong> Good recall captures most ASD cases</li>
+                            <li><strong>F1-Score:</strong> Balanced performance across both classes</li>
+                            <li><strong>Confidence Scores:</strong> Probability estimates provided with predictions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+<script>
+// Initialize first tab as active on page load
+document.addEventListener('DOMContentLoaded', function() {
+    showTab('dataset-tab');
+});
+</script>
+{% endblock %}

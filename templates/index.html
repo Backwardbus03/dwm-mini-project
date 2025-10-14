@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Welcome - ASD Screening Hub{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6">
+    <div class="w-full max-w-7xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 animate-fadeIn">
+            <!-- Welcome Tile with Image -->
+            <div class="group relative overflow-hidden rounded-3xl shadow-2xl h-[45vh] lg:h-[70vh] transform hover:scale-[1.02] transition-all duration-500">
+                <img src="/static/images/hero-brain.jpg" alt="ASD Brain Research" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
+                <div class="relative z-10 h-full flex flex-col justify-center p-6 sm:p-10 text-white">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 drop-shadow-lg leading-tight">
+                        Welcome to the ASD Screening & Analytics Hub 🧠
+                    </h1>
+                    <p class="text-lg sm:text-xl lg:text-2xl leading-relaxed opacity-95">
+                        A comprehensive tool for Autism Spectrum Disorder screening, powered by machine learning to provide insights and analytics.
+                    </p>
+                </div>
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+            </div>
+            
+            <!-- Right Side Tiles -->
+            <div class="grid grid-cols-1 gap-6">
+                <!-- Get Started Tile - Entire tile is clickable -->
+                <a href="{{ url_for('screener') }}" class="block group relative overflow-hidden rounded-3xl shadow-2xl h-[22vh] lg:h-[33vh] transform hover:scale-105 hover:shadow-cyan-500/50 transition-all duration-500 cursor-pointer">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-600"></div>
+                    <div class="relative z-10 h-full flex flex-col justify-center p-6 text-white">
+                        <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 drop-shadow-md">🧪 Get Started</h3>
+                        <p class="text-base sm:text-lg lg:text-xl opacity-90 mb-4">Begin a new assessment with our AI-powered screener.</p>
+                        <div class="mt-auto flex items-center gap-2 text-lg sm:text-xl font-bold">
+                            <span>Start Screening</span>
+                            <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                </a>
+                
+                <!-- Analytics Tile - Entire tile is clickable -->
+                <a href="{{ url_for('dashboard') }}" class="block group relative overflow-hidden rounded-3xl shadow-2xl h-[22vh] lg:h-[33vh] transform hover:scale-105 hover:shadow-green-500/50 transition-all duration-500 cursor-pointer">
+                    <img src="/static/images/analytics-chart.jpg" alt="Analytics Dashboard" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-teal-500 to-green-600"></div>
+                    <div class="relative z-10 h-full flex flex-col justify-center p-6 text-white">
+                        <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 drop-shadow-md">📊 Analytics</h3>
+                        <p class="text-base sm:text-lg lg:text-xl opacity-90 mb-4">Explore model insights and feature importance.</p>
+                        <div class="mt-auto flex items-center gap-2 text-lg sm:text-xl font-bold">
+                            <span>View Dashboard</span>
+                            <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

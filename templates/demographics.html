@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %}Demographics & Statistics{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-4rem)] px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="glass-effect rounded-2xl shadow-xl p-6 sm:p-8 mb-6 border border-white/20 animate-fadeIn">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 flex items-center gap-3">
+                <span class="text-4xl sm:text-5xl">🌍</span>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Demographics & Statistics</span>
+            </h1>
+            <p class="text-base sm:text-lg lg:text-xl text-gray-700">Explore global autism screening data patterns across countries and ethnicities among Adults</p>
+        </div>
+
+        {% if error %}
+        <!-- Error Message -->
+        <div class="glass-effect rounded-2xl shadow-xl p-6 border-2 border-red-300 animate-fadeIn">
+            <div class="flex items-center gap-4">
+                <span class="text-5xl">⚠️</span>
+                <div>
+                    <h2 class="text-2xl font-bold text-red-600 mb-2">Data Not Available</h2>
+                    <p class="text-lg text-gray-700">Unable to load demographic data. Please ensure train.csv is in the project directory.</p>
+                    <p class="text-sm text-gray-600 mt-2">Error: {{ error }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 animate-fadeIn">
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">👥</div>
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold">Total Participants</p>
+                        <p class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{{ stats.total_participants }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">🌐</div>
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold">Countries Represented</p>
+                        <p class="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">{{ stats.countries }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">🧬</div>
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold">Ethnic Groups</p>
+                        <p class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{{ stats.ethnicities }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-all duration-300">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">📊</div>
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold">ASD Detection Rate</p>
+                        <p class="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{{ stats.asd_rate }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- World Map -->
+        {% if charts.map %}
+        <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 mb-6 animate-fadeIn">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span class="text-3xl">🗺️</span> Global Distribution
+            </h2>
+            <div class="bg-white rounded-xl p-4 shadow-inner">
+                {{ charts.map | safe }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Country Distribution -->
+            {% if charts.country %}
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="text-3xl">🌍</span> Top Countries
+                </h2>
+                <div class="bg-white rounded-xl p-4 shadow-inner">
+                    {{ charts.country | safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Ethnicity Distribution -->
+            {% if charts.ethnicity %}
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="text-3xl">🧬</span> Ethnicity Breakdown
+                </h2>
+                <div class="bg-white rounded-xl p-4 shadow-inner">
+                    {{ charts.ethnicity | safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Gender Distribution -->
+            {% if charts.gender %}
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="text-3xl">👫</span> Gender Distribution
+                </h2>
+                <div class="bg-white rounded-xl p-4 shadow-inner">
+                    {{ charts.gender | safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ASD by Ethnicity -->
+            {% if charts.ethnicity_asd %}
+            <div class="glass-effect rounded-2xl shadow-xl p-6 border border-white/20 animate-fadeIn">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="text-3xl">📈</span> ASD by Ethnicity
+                </h2>
+                <div class="bg-white rounded-xl p-4 shadow-inner">
+                    {{ charts.ethnicity_asd | safe }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Info Box -->
+        <div class="glass-effect border-2 border-blue-300/50 rounded-2xl p-6 shadow-xl animate-fadeIn">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 text-3xl sm:text-4xl">ℹ️</div>
+                <div>
+                    <h3 class="text-xl font-bold text-blue-700 mb-2">About This Data</h3>
+                    <p class="text-base sm:text-lg text-gray-800">
+                        This demographic data is sourced from a global autism screening study comprising {{ stats.total_participants }} participants across {{ stats.countries }} countries. 
+                        The visualizations help identify patterns and trends in autism screening data across different populations and regions.
+                    </p>
+                    <p class="text-sm text-gray-600 mt-3">
+                        <strong>Note:</strong> This data is for research and educational purposes. Demographics are self-reported by participants during screening. There is missing data regarding country and ethnicity of the participant since these fields were optional and they chose to keep it confidential. Additionally, this data is different from the screener input data and should not be used for individual diagnosis.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
