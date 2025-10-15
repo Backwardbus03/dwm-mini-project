@@ -153,6 +153,16 @@
                             class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         {% endif %}
                     </a>
+                    <a href="{{ url_for('early_detection') }}"
+                        class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
+                              {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'early_detection' else 'text-gray-700 hover:text-indigo-600' }}">
+                        <span class="relative z-10">Early Detection</span>
+                        {% if request.endpoint != 'early_detection' %}
+                        <span
+                            class="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        {% endif %}
+                    </a>
+
                     <a href="{{ url_for('dashboard') }}"
                         class="group relative inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg
                               {{ 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' if request.endpoint == 'dashboard' else 'text-gray-700 hover:text-indigo-600' }}">
