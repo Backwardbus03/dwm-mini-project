@@ -50,6 +50,9 @@ def save_data(data):
     print("Data saved.")
 
 
+# Load models at application startup
+load_models()
+
 # --- Flask Routes ---
 
 @app.route('/')
@@ -403,5 +406,4 @@ def early_detection():
 
 # --- Main execution block ---
 if __name__ == '__main__':
-    load_models()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
