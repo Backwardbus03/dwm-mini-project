@@ -1,5 +1,5 @@
-flask
-joblib
-pandas
-plotly
-scikit-learn
+joblib~=1.5.2
+pandas~=2.2.3
+plotly~=6.3.1
+Flask~=3.1.2
+scikit-learn~=1.7.2
