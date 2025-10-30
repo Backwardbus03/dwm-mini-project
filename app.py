@@ -1,42 +1,36 @@
-import os # For file path operations
-import joblib # For loading ML models
-import pandas as pd # For data manipulation
-import plotly.express as px # For visualization
-import plotly.graph_objects as go # Also for visualization
-from flask import Flask, render_template, request # For web app framework
-from datetime import datetime # For timestamping data entries
-
+import os
+import joblib
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from flask import Flask, render_template, request
+from datetime import datetime
 
 # --- App Initialization ---
 app = Flask(__name__)
 
-
-MODELS = {} # global cache for loaded models so we don't reload on every request
+# --- Helper Functions ---
+MODELS = {}
 
 
 def load_models():
-    # load saved ML pipelines from disk into the MODELS dict
-    # we expect joblib files in the models/ directory
+    """Loads all models into a global dictionary."""
     model_paths = {
         'adult': os.path.join('models', 'adult_model.joblib'),
         'adolescent': os.path.join('models', 'adolescent_model.joblib'),
         'child': os.path.join('models', 'child_model.joblib'),
-        'toddler_qchat': os.path.join('models', 'toddler_qchat_model.joblib')
+        'toddler_qchat': os.path.join('models', 'toddler_qchat_model.joblib')  # ← ADD THIS LINE
     }
-
-    # try loading each file if it exists, silently skip missing files
+    
     for key, path in model_paths.items():
         if os.path.exists(path):
-            # load the sklearn pipeline (or model) saved with joblib
             MODELS[key] = joblib.load(path)
-    # quick console feedback so devs know which models are available
-    print(f"Models loaded successfully! Available: {list(MODELS.keys())}")
+    print(f"Models loaded successfully! Available: {list(MODELS.keys())}")  # ← UPDATE THIS LINE
  
 
 
 def load_importance(model_name):
-    # Load CSV that lists feature importances for a given model
-    # returns a DataFrame or None if file missing
+    """Loads feature importance data."""
     path = os.path.join('models', f'{model_name}_feature_importance.csv')
     if os.path.exists(path):
         return pd.read_csv(path)
@@ -44,63 +38,60 @@ def load_importance(model_name):
 
 
 def save_data(data):
-    # Append a single record (dict) to data/collected_data.csv
-    # Creates data/ dir if missing and writes header only on first write
+    """Saves submitted data to a CSV file."""
     filepath = os.path.join('data', 'collected_data.csv')
     os.makedirs('data', exist_ok=True)
-    # add a human-friendly timestamp so later we can trace contributions
     data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     df = pd.DataFrame([data])
     if not os.path.exists(filepath):
-        # first time: write header
         df.to_csv(filepath, index=False)
     else:
-        # append without header
         df.to_csv(filepath, mode='a', header=False, index=False)
     print("Data saved.")
 
 
-## Routing ##
+# Load models at application startup
+load_models()
+
+# --- Flask Routes ---
+
 @app.route('/')
 def home():
-    # landing page
+    """Renders the homepage."""
     return render_template('index.html')
 
 
 @app.route('/methodology')
 def methodology():
+    """Renders the methodology page."""
     return render_template('methodology.html')
 
 
 @app.route('/demographics')
 def demographics():
+    """Renders demographics page - ALL METRICS USE RATES (%) with ASD vs Non-ASD differentiation."""
     try:
-        # read the train.csv dataset (used for plotting demographics)
         demo_df = pd.read_csv('data/train.csv')
 
-
-        # quick cleaning / helper columns we use in charts
-        # replace missing value marker with a readable label
+        # Clean data
         demo_df['ethnicity_clean'] = demo_df['ethnicity'].replace('?', 'Unknown')
-        # map numeric class to a friendly label for hover text
         demo_df['Class/ASD_label'] = demo_df['Class/ASD'].map({0: 'No ASD', 1: 'ASD'})
 
         charts = {}
 
-
+        # ═══════════════════════════════════════════════════════════════════
         # 1. COUNTRY ASD RATE (Top 15 by sample size, colored by ASD rate)
-        # aggregate counts and ASD case sums by country
+        # ═══════════════════════════════════════════════════════════════════
         country_stats = demo_df.groupby('contry_of_res').agg({
             'Class/ASD': ['count', 'sum']
         }).reset_index()
-        # flatten multiindex columns to something easy to work with
         country_stats.columns = ['country', 'total', 'asd_cases']
-        # percentage of ASD in each country (rounded)
         country_stats['asd_rate'] = (country_stats['asd_cases'] / country_stats['total'] * 100).round(2)
-        # convenience column for plotting stacked charts later
         country_stats['no_asd_rate'] = (100 - country_stats['asd_rate']).round(2)
+
         # Get top 15 countries by total participants
         top_countries = country_stats.nlargest(15, 'total').sort_values('asd_rate')
+
         fig_country = px.bar(
             top_countries,
             x='asd_rate',
@@ -116,13 +107,13 @@ def demographics():
                 'total': True,
                 'asd_cases': True
             }
-        ) # Horizontal bar chart
-        fig_country.update_layout(showlegend=False, height=500) 
+        )
+        fig_country.update_layout(showlegend=False, height=500)
         charts['country'] = fig_country.to_html(full_html=False, include_plotlyjs='cdn')
 
-
+        # ═══════════════════════════════════════════════════════════════════
         # 2. ETHNICITY DISTRIBUTION (Pie chart showing sample proportions)
-        # simple pie chart of sample proportions by ethnicity
+        # ═══════════════════════════════════════════════════════════════════
         ethnicity_counts = demo_df['ethnicity_clean'].value_counts()
         fig_ethnicity = px.pie(
             values=ethnicity_counts.values,
@@ -134,14 +125,15 @@ def demographics():
         fig_ethnicity.update_traces(textposition='inside', textinfo='percent+label')
         charts['ethnicity'] = fig_ethnicity.to_html(full_html=False, include_plotlyjs='cdn')
 
-
-        # 3. ETHNICITY ASD RATE (Stacked bar showing ASD%)
-        # compute ASD per ethnicity for stacked bar
+        # ═══════════════════════════════════════════════════════════════════
+        # 3. ETHNICITY ASD RATE (Stacked bar showing ASD% vs No ASD%)
+        # ═══════════════════════════════════════════════════════════════════
         ethnicity_stats = demo_df.groupby('ethnicity_clean').agg({
             'Class/ASD': ['count', 'sum']
         }).reset_index()
         ethnicity_stats.columns = ['ethnicity', 'total', 'asd_cases']
         ethnicity_stats['asd_rate'] = (ethnicity_stats['asd_cases'] / ethnicity_stats['total'] * 100).round(2)
+        ethnicity_stats['no_asd_rate'] = (100 - ethnicity_stats['asd_rate']).round(2)
         ethnicity_stats = ethnicity_stats.sort_values('asd_rate', ascending=False)
 
         fig_eth_asd = go.Figure(data=[
@@ -153,6 +145,15 @@ def demographics():
                 text=[f"{x:.1f}%" for x in ethnicity_stats['asd_rate']],
                 textposition='inside',
                 hovertemplate='%{x}<br>ASD: %{y:.2f}%<extra></extra>'
+            ),
+            go.Bar(
+                name='No ASD',
+                x=ethnicity_stats['ethnicity'],
+                y=ethnicity_stats['no_asd_rate'],
+                marker_color='#10b981',
+                text=[f"{x:.1f}%" for x in ethnicity_stats['no_asd_rate']],
+                textposition='inside',
+                hovertemplate='%{x}<br>No ASD: %{y:.2f}%<extra></extra>'
             )
         ])
         fig_eth_asd.update_layout(
@@ -166,9 +167,9 @@ def demographics():
         )
         charts['ethnicity_asd'] = fig_eth_asd.to_html(full_html=False, include_plotlyjs='cdn')
 
-
+        # ═══════════════════════════════════════════════════════════════════
         # 4. GENDER ASD RATE COMPARISON (Side-by-side bars with differentiation)
-        # gender breakdown - similar approach to above
+        # ═══════════════════════════════════════════════════════════════════
         gender_stats = demo_df.groupby('gender').agg({
             'Class/ASD': ['count', 'sum']
         }).reset_index()
@@ -176,7 +177,6 @@ def demographics():
         gender_stats['asd_rate'] = (gender_stats['asd_cases'] / gender_stats['total'] * 100).round(2)
         gender_stats['no_asd_rate'] = (100 - gender_stats['asd_rate']).round(2)
 
-        # pick out male / female rows (dataset uses 'm' and 'f')
         male_stats = gender_stats[gender_stats['gender'] == 'm']
         female_stats = gender_stats[gender_stats['gender'] == 'f']
 
@@ -208,7 +208,7 @@ def demographics():
                     f"{female_stats['no_asd_rate'].values[0]:.1f}%" if len(female_stats) > 0 else "0%"
                 ],
                 textposition='auto',
-                visible='legendonly' 
+                visible='legendonly'  # Hidden by default but toggleable
             )
         ])
         fig_gender.update_layout(
@@ -220,9 +220,9 @@ def demographics():
         )
         charts['gender'] = fig_gender.to_html(full_html=False, include_plotlyjs='cdn')
 
-
+        # ═══════════════════════════════════════════════════════════════════
         # 5. WORLD MAP - COLOR BY ASD RATE (Red=High, Green=Low)
-        # create a dataset suitable for a choropleth world map
+        # ═══════════════════════════════════════════════════════════════════
         country_data = demo_df.groupby('contry_of_res').agg({
             'Class/ASD': ['count', 'sum']
         }).reset_index()
@@ -235,7 +235,7 @@ def demographics():
             country_data,
             locations='country',
             locationmode='country names',
-            color='asd_rate', 
+            color='asd_rate',  # ← KEY CHANGE: Using rate instead of count
             hover_name='country',
             hover_data={
                 'total': True,
@@ -259,9 +259,9 @@ def demographics():
         fig_map.update_layout(height=500)
         charts['map'] = fig_map.to_html(full_html=False, include_plotlyjs='cdn')
 
-
+        # ═══════════════════════════════════════════════════════════════════
         # STATISTICS SUMMARY
-        # basic summary numbers shown on the demographics page
+        # ═══════════════════════════════════════════════════════════════════
         total_asd = demo_df['Class/ASD'].sum()
         total_no_asd = len(demo_df) - total_asd
 
@@ -275,20 +275,18 @@ def demographics():
             'no_asd_rate': (total_no_asd / len(demo_df) * 100).round(2)
         }
 
-        # finally render the template with charts and stats dict
         return render_template('demographics.html', charts=charts, stats=stats)
 
     except Exception as e:
-        # catch-all so the page doesn't crash in production; log error to console
         print(f"Error loading demographics: {e}")
         import traceback
         traceback.print_exc()
-        # render the same template but with empty charts so UI still loads
         return render_template('demographics.html', charts={}, stats={}, error=str(e))
 
 
 @app.route('/dashboard')
 def dashboard():
+    """Renders the interactive analysis page."""
     data_choice = request.args.get('age_group', 'Adult')
     
     # Map Toddler_qchat to toddler_qchat for file loading
@@ -299,10 +297,8 @@ def dashboard():
     importance_df = load_importance(model_name)
 
     if importance_df is not None:
-        # clean up feature names for display, remove technical prefixes
         importance_df['feature'] = importance_df['feature'].str.replace('A_Score', '', regex=False).str.replace('_', ' ').str.title()
 
-        # simple horizontal bar of the top features
         fig = px.bar(
             importance_df.head(15),
             x='importance',
@@ -320,6 +316,7 @@ def dashboard():
 
 @app.route('/screener', methods=['GET', 'POST'])
 def screener():
+    """Renders the screener form and handles submissions."""
     prediction_result = None
     if request.method == 'POST':
         form_data = request.form
@@ -346,13 +343,10 @@ def screener():
         }
 
         # Make prediction
-        # get the pipeline from cache and build a DataFrame with expected columns
         model_pipeline = MODELS[model_choice]
-        # preprocessor.feature_names_in_ contains the columns the pipeline expects
         model_features = model_pipeline.named_steps['preprocessor'].feature_names_in_
         input_df = pd.DataFrame([input_data], columns=model_features)
 
-        # model returns a class label and we also compute class probability for confidence
         prediction = model_pipeline.predict(input_df)[0]
         confidence = model_pipeline.predict_proba(input_df)[0][prediction] * 100
 
@@ -372,6 +366,7 @@ def screener():
 # Add this new route AFTER the /screener route (after line ~180)
 @app.route('/early-detection', methods=['GET', 'POST'])
 def early_detection():
+    """Renders the Q-CHAT-10 toddler screener (12-36 months) and handles submissions."""
     prediction_result = None
     
     if request.method == 'POST':
@@ -394,14 +389,11 @@ def early_detection():
         }
         
         # Make prediction
-        # use the toddler Q-CHAT pipeline (we expect it to be loaded)
         model_pipeline = MODELS['toddler_qchat']
-        # define explicit order of features the model expects
         model_features = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 
                          'Age_Mons', 'Sex', 'Jaundice', 'Family_mem_with_ASD']
         input_df = pd.DataFrame([input_data], columns=model_features)
         
-        # predict class and probability
         prediction = model_pipeline.predict(input_df)[0]
         confidence = model_pipeline.predict_proba(input_df)[0][prediction] * 100
         
@@ -412,8 +404,6 @@ def early_detection():
     
     return render_template('early_detection.html', result=prediction_result)
 
-
-
-# --- Run App ---
+# --- Main execution block ---
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
